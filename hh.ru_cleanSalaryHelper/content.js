@@ -5,8 +5,11 @@
     if (!salaryDiv) return;
 
     const TAX_RATE = 0.87; // 13% налог
+    
+    // Заменить неразрывный пробел на обычный пробел
+    const salaryDivText = salaryDiv.innerText.replace(/\u00a0/g, ' ');
 
-    let salaryMatch = (/от ([\d\s ]+) до ([\d\s ]+) ₽ за месяц, до вычета налогов/g).exec(salaryDiv.innerText);
+    let salaryMatch = (/от ([\d\s]+) до ([\d\s]+) ₽ за месяц, до вычета налогов/g).exec(salaryDivText);
     if (salaryMatch) {
         const salaries = [salaryMatch[1], salaryMatch[2]].map(salaryStr => {
             const cleanSalary = salaryStr.replace(/[\s ]/g, '');
@@ -29,9 +32,9 @@
         return;
     }
 
-    salaryMatch = (/до ([\d\s ]+) ₽ за месяц, до вычета налогов/g).exec(salaryDiv.innerText);
+    salaryMatch = (/((?:от|до) )?([\d\s]+) ₽ за месяц, до вычета налогов/g).exec(salaryDivText);
     if (salaryMatch) {
-        let salaryStr = salaryMatch[1].replace(/[\s ]/g, '');
+        let salaryStr = salaryMatch[2].replace(/\s/g, ''); // удалить пробелы в числе
         const salary = parseInt(salaryStr);
 
         if (isNaN(salary)) {
@@ -41,7 +44,7 @@
 
         const realSalary = Math.round(salary * TAX_RATE);
         const realSalaryDiv = document.createElement('div');
-        realSalaryDiv.innerHTML = `(${realSalary.toLocaleString('ru-RU')} ₽ после вычета)`;
+        realSalaryDiv.innerHTML = `(${salaryMatch[1] ?? ''}${realSalary.toLocaleString('ru-RU')} ₽ после вычета)`;
 
         salaryDiv.appendChild(realSalaryDiv);
     }
