@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Помощник hh.ru",
+  "version": "1.0",
+  "description": "Показывает зарплату после вычета налогов (Россия, рубли).",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://hh.ru/*", "*://*.hh.ru/*"],
+      "js": ["content.js"],
+	  "run_at": "document_idle"
+    }
+  ],
+  "permissions": []
+}
